@@ -4,6 +4,7 @@ import requests
 from PIL import Image
 import random
 import string
+import time
 
 # source /Users/jonathanolson/Projects/Environments/crawl_venv/bin/activate
 
@@ -102,7 +103,7 @@ def resizeImage(url, imageDimensions, desiredDimensions):
     img = Image.open(requests.get(url, stream=True).raw)
     img = img.crop(( widthCrop, heightCrop, widthCrop+desiredWidth, heightCrop+desiredHeight ))
 
-    print('type(img):', type(img))
+    # print('type(img):', type(img))
 
     return img
 
@@ -118,14 +119,14 @@ def getImageOptions():
 
     # Randomy choose a page on the hubble website to find an image
     url = f'https://www.spacetelescope.org/images/potw/page/{random.randint(1, 23)}/'
-    print('URL:', url)
+    # print('URL:', url)
 
     # Get image download options for this image
     source = requests.get(url).text
     soup = BeautifulSoup(source, 'lxml')
     imageOptions = soup.find_all('div', class_='col-md-3 col-sm-6 col-xs-12')
 
-    print('type(imageOptions):', type(imageOptions))
+    # print('type(imageOptions):', type(imageOptions))
 
     return imageOptions
 
@@ -140,19 +141,30 @@ def downloadImages(N=5):
         [None] -- [returns nothing]
     """
 
+    print('downloadImages Called')
 
     screenWidth, screenHeight = getScreenDimensions()
 
     imagesSaved = 0
+    # whileExecutions = 0
 
     while imagesSaved < N:
 
+        # Sleep for one second to reduce request frequency in looping
+        time.sleep(1)
+
+        # print(f'Beginning of imagesSaved < N loop. Execution number {imagesSaved}')
+
+        # Get a group of pictures of the week to choose from
         imageOptions = getImageOptions()
 
         # Find downloadOption that has width and height big enough
         while True:
 
-            # Chooce a random image from the provided page and get its URL
+            # print(f'Beginning of while True within while imagesSaved < N. Execution number {whileExecutions}')
+            # whileExecutions += 1
+
+            # Chooce a random image from the group of pictures of the week; get its URL
             choice = random.choice(imageOptions)
             
             processedChoice = checkImageSize(choice)
@@ -173,5 +185,4 @@ def downloadImages(N=5):
                 imagesSaved += 1
                 break
 
-downloadImages()
 
