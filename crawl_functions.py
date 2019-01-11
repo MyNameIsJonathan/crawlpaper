@@ -10,7 +10,7 @@ import time
 
 def getScreenDimensions():
     
-    """[Ues NSScreen to return current monitor dimensions]
+    """[Uses NSScreen to return current monitor dimensions]
     
     Returns:
         [tuple] -- [a tuple of two ints: screenWidth, screenHeight]
