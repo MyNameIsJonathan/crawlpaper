@@ -6,8 +6,6 @@ import random
 import string
 import time
 
-# source /Users/jonathanolson/Projects/Environments/crawl_venv/bin/activate
-
 def getScreenDimensions():
     
     """[Uses NSScreen to return current monitor dimensions]
@@ -151,7 +149,7 @@ def downloadImages(N=5):
     while imagesSaved < N:
 
         # Sleep for one second to reduce request frequency in looping
-        time.sleep(1)
+        # time.sleep(1)
 
         # print(f'Beginning of imagesSaved < N loop. Execution number {imagesSaved}')
 
