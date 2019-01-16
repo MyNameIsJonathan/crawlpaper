@@ -1,41 +1,71 @@
 import rumps
 import time
 import schedule
+import os
 import set_wallpaper_functions as wallpaper
 import crawl_functions as crawl
 
-# source /Users/jonathanolson/Projects/Environments/crawl_venv/bin/activate
+# Initialization info:
+
+    # source /Users/jonathanolson/Projects/Environments/crawl_venv/bin/activate
+
+    # Create app using the following call to PyInstaller
+        # pyinstaller --clean --onefile --noconsole CrawlPaper.py
+    # Edit the file dist/CrawlPaper.app/Contents/Info.plist to inclue the following key-value pair
+            # <key>LSBackgroundOnly</key>
+            # <string>True</string>
+
+# Add function to access images within app
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
-# Create app using the following call to PyInstaller
-    # pyinstaller --clean --onefile --noconsole  CrawlPaper.py
-# Edit the file CrawlPaper/Contents/Info.plist to inclue the following key-value pair
-        # <key>LSBackgroundOnly</key>
-        # <string>True</string>
+# Define the wrapper function for the timer class
 @rumps.timer(2)
 def timerFunction(sender):
     print('Timer running')
     sender.updateWallpaper()
 
 class CrawlPaper(rumps.App):
+    """[A class to define the CrawlPaper App]
+    
+    Arguments:
+        rumps {[empty]} -- [no input required -- simply run app via app.run()]
+    """
+
     def __init__(self):
+
+        # Create subclass of rumps.App
         super(CrawlPaper, self).__init__(type(self).__name__, icon="/Users/jonathanolson/GitHub/crawlpaper/StatusBarButtonImage@2x.png", template=True)
         self.currentWallpaper = None
+        self.timer = rumps.Timer(self.updateWallpaper, 60)
+        self.timer.start()
         self.menu = ["Update Wallpaper", "Download New Wallpapers", 
         "Delete Current Wallpaper", "Delete All Wallpapers",
         "Enable Wallpaper Auto Update", "Disable Wallpaper Auto Update"]
-        self.timer = rumps.Timer(self.updateWallpaper, 60)
-        self.timer.start()
-        rumps.debug_mode(True)
 
     @rumps.clicked("Update Wallpaper")
     def updateWallpaper(self, _):
+
+        # Make sure there's enough wallpapers to set new wallpaper
+        numberOfLocalWallpapers = wallpaper.localWallpaperCount()
+        if numberOfLocalWallpapers < 2: 
+            rumps.alert("Not enough local wallpapers found. \
+            Downloading new wallpapers now.")
+
+        # Set new wallpaper
         newWallpaper = wallpaper.setRandomWallpaper(self.currentWallpaper)
-        # print('old wallpaper:', self.currentWallpaper, 'new wallpaper:', newWallpaper)
         self.currentWallpaper = newWallpaper
 
     @rumps.clicked("Download New Wallpapers")
     def downloadNewWallpapers(self, _):
+
+        # Alert user of new download -- takes ~10 seconds.
         rumps.alert(message='Downloading new wallpapers. Please wait!')
         crawl.downloadImages()
 
@@ -70,11 +100,15 @@ class CrawlPaper(rumps.App):
 
     @rumps.clicked("Enable Wallpaper Auto Update")
     def startTimer(self, _):
+
+        # Start a new timer when this button is clicked
         self.timer = rumps.Timer(self.updateWallpaper, 60)
         self.timer.start()
 
     @rumps.clicked("Disable Wallpaper Auto Update")
     def stopTimer(self, _):
+
+        # Stop the current instance's timer when clicked
         self.timer = self.timer.stop()
 
 
