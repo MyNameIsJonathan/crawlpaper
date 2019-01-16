@@ -2,6 +2,7 @@ import rumps
 import time
 import schedule
 import os
+import sys
 import set_wallpaper_functions as wallpaper
 import crawl_functions as crawl
 
@@ -10,19 +11,17 @@ import crawl_functions as crawl
     # source /Users/jonathanolson/Projects/Environments/crawl_venv/bin/activate
 
     # Create app using the following call to PyInstaller
-        # pyinstaller --clean --onefile --noconsole CrawlPaper.py
+        # pyinstaller --clean --onefile --noconsole CrawlPaper.spec
     # Edit the file dist/CrawlPaper.app/Contents/Info.plist to inclue the following key-value pair
             # <key>LSBackgroundOnly</key>
             # <string>True</string>
 
-# Add function to access images within app
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+# Specify local path for images
+try:
+    base_path = getattr(sys, '_MEIPASS','.')+'/'
+except Exception:
+    base_path = os.path.abspath(".")
 
-    return os.path.join(base_path, relative_path)
 
 
 # Define the wrapper function for the timer class
@@ -41,7 +40,7 @@ class CrawlPaper(rumps.App):
     def __init__(self):
 
         # Create subclass of rumps.App
-        super(CrawlPaper, self).__init__(type(self).__name__, icon="/Users/jonathanolson/GitHub/crawlpaper/StatusBarButtonImage@2x.png", template=True)
+        super(CrawlPaper, self).__init__(type(self).__name__, icon="/Users/jonathanolson/GitHub/crawlpaper/mymenubaricon.png", template=True)
         self.currentWallpaper = None
         self.timer = rumps.Timer(self.updateWallpaper, 60)
         self.timer.start()

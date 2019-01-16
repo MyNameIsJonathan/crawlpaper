@@ -5,6 +5,7 @@ from PIL import Image
 import random
 import string
 import time
+import sys
 
 def getScreenDimensions():
     
@@ -175,8 +176,10 @@ def downloadImages(N=5):
 
                 # Randonly generate a file name for the current image
                 fileName = ''.join(random.choices(string.ascii_uppercase + string.digits, k=15))
-                fileDirectory = '/Users/jonathanolson/GitHub/crawlpaper/images/'
+                fileDirectory = getattr(sys, '_MEIPASS','.')+'/'
                 filePath = fileDirectory + fileName + '.jpg'
+
+                print('File Path crawl:', filePath)
 
                 img = resizeImage(imageURL, (imageWidth, imageHeight),(screenWidth, screenHeight))
                 img.save(filePath)

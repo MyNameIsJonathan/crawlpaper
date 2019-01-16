@@ -2,6 +2,7 @@ from appscript import app, mactypes
 import crawl_functions as crawl
 import os
 import random
+import sys
 
 def localWallpaperCount():
 
@@ -11,7 +12,7 @@ def localWallpaperCount():
         [ int ] -- [number of .jpg files found in images/ folder]
     """
 
-    mydir = "/Users/jonathanolson/GitHub/crawlpaper/images"
+    mydir = getattr(sys, '_MEIPASS','.')+'/'
     myWallpapers = [image for image in os.listdir(mydir) if image.endswith(".jpg")]
 
     return len(myWallpapers)
@@ -24,8 +25,7 @@ def findRandomLocalWallpapers():
         [ str ] -- [string ending of random image's filename]
     """
 
-
-    mydir = "/Users/jonathanolson/GitHub/crawlpaper/images"
+    mydir = getattr(sys, '_MEIPASS','.')+'/'
     myWallpapers = [image for image in os.listdir(mydir) if image.endswith(".jpg")]
 
     # If no images found, download some
@@ -43,9 +43,8 @@ def setWallpaper(imageName):
 
     """[ sets the current monitor's wallpaper to the argument image ]
     """
-
-
-    app("Finder").desktop_picture.set(mactypes.File(f"/Users/jonathanolson/GitHub/crawlpaper/images/{imageName}"))
+    mydir = getattr(sys, '_MEIPASS','.')+'/'
+    app("Finder").desktop_picture.set(mactypes.File(mydir + imageName))
 
 def setRandomWallpaper(currentWallpaper=None):
 
@@ -85,7 +84,7 @@ def removeCurrentWallpaper(wallpaperPath):
 
 def getAllWallpapers():
 
-    """[ retrieves a list of all images in images/ folder ]
+    """[ retrieves a list of all images ]
     
     Returns:
         [ list of str ] -- [ returns a list of complete paths for 
@@ -94,9 +93,8 @@ def getAllWallpapers():
 
     
     # Find all current wallpapers
-    mydir = "/Users/jonathanolson/GitHub/crawlpaper/images"
-    myWallpapers = ["/Users/jonathanolson/GitHub/crawlpaper/images/" \
-        + image for image in os.listdir(mydir) if image.endswith(".jpg")]
+    mydir = getattr(sys, '_MEIPASS','.')+'/'
+    myWallpapers = [mydir + image for image in os.listdir(mydir) if image.endswith(".jpg")]
 
     return myWallpapers
 
