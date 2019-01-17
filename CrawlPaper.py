@@ -40,7 +40,7 @@ class CrawlPaper(rumps.App):
     def __init__(self):
 
         # Create subclass of rumps.App
-        super(CrawlPaper, self).__init__(type(self).__name__, icon="/Users/jonathanolson/GitHub/crawlpaper/mymenubaricon.png", template=True)
+        super(CrawlPaper, self).__init__(type(self).__name__, icon="/Users/jonathanolson/GitHub/crawlpaper/menuicon.png", template=True)
         self.currentWallpaper = None
         self.timer = rumps.Timer(self.updateWallpaper, 60)
         self.timer.start()

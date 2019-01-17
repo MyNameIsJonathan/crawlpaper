@@ -29,8 +29,10 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=False )
+          console=False , icon='/Users/jonathanolson/GitHub/crawlpaper/icons.icns')
 app = BUNDLE(exe,
              name='CrawlPaper.app',
-             icon='/Users/jonathanolson/GitHub/crawlpaper/myicon.icns',
-             bundle_identifier=None)
+             icon='/Users/jonathanolson/GitHub/crawlpaper/icons.icns',
+             bundle_identifier=None,
+             info_plist={
+                'LSUIElement': 'True'})
