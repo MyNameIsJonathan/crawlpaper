@@ -8,7 +8,7 @@ idna==2.8
 itsdangerous==1.1.0
 Jinja2==2.10
 MarkupSafe==1.1.0
-Pillow==6.2.0
+Pillow==8.1.1
 pyobjc==5.1.2
 pyobjc-core==5.1.2
 pyobjc-framework-Accounts==5.1.2
